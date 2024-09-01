@@ -12,6 +12,9 @@ import (
 func main() {
 	r := gin.Default()
 	store := cookie.NewStore([]byte(os.Getenv("APP_KEY")))
+	r.LoadHTMLGlob("views/layouts/*.html")
+	r.LoadHTMLGlob("views/*.html")
+
 	r.Use(sessions.Sessions("gin-session", store))
 	r.Use(csrf.Middleware(csrf.Options{
 		Secret: os.Getenv("APP_KEY"),
@@ -22,7 +25,7 @@ func main() {
 	}))
 
 	r.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
+		ctx.HTML(200, "index.html", gin.H{
 			"message": "hello world",
 		})
 	})
